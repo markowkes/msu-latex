@@ -1801,13 +1801,13 @@
   \cleardoublepage
   \else
   \clearpage
-
-  \else  %there is no appendix so put \refname on same page
+  \fi
   
+  \else  %there is no appendix so put \refname on same page
   \begin{center}
     \MakeUppercase{\refname}
   \end{center}
-  \vskip 30\p@  %\vskip 0.3in
+  \vskip 18\p@  %\vskip 0.3in
   \fi %end ifAppend
 
   % Remove title from bibliography
