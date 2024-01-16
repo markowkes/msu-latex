@@ -781,13 +781,20 @@
     \clearpage
   }
 }
-\else
+\else  % Single appendix
 \def\@makeapphead#1{%
-  { %\parindent \z@ \raggedright \normalfont
+  { \parindent \z@ \raggedright \normalfont
+    \quad \vspace{2.5in}\par
+    \begin{center}
+      \underline{\MakeUppercase{\appendixname}}
+    \end{center}
+    \par\nobreak
+    \vskip 0\p@
+    \interlinepenalty\@M
     \begin{doublespaced}
-      \centering \MakeUppercase{\appendixname}: \MakeUppercaseWithNewline{#1}
+      \centering \MakeUppercaseWithNewline{#1}\par\nobreak
     \end{doublespaced}
-    \vskip 30\p@  %\vskip 0.3in
+    \clearpage
   }
 }
 \fi
@@ -1779,11 +1786,10 @@
   {\texorpdfstring{\MakeUppercase{\refname}}{\refname}}
   % \bibliography{\@bibfiles}
 
-  \ifAppend
-  \ifAppendmultiple
+  \ifAppend %there are one or moreappendices so put \refname on seperate page
   \if@openright
   \cleardoublepage
-  \else
+  \else 
   \clearpage
   \fi
   \quad \vspace{2.5in}\par
@@ -1795,14 +1801,7 @@
   \cleardoublepage
   \else
   \clearpage
-  \fi
-  \else %there is only one appendix so put \refname on same page
-  
-  \begin{center}
-    \MakeUppercase{\refname}
-  \end{center}
-  \vskip 30\p@  %\vskip 0.3in
-  \fi %end ifAppendmultiple
+
   \else  %there is no appendix so put \refname on same page
   
   \begin{center}
