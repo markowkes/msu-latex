@@ -1778,7 +1778,6 @@
 \newcommand{\references}{%
   \ifbibpage
   \typeout{*****************     \refname    ******************}
-  \newlinestretch{1.0}
   \if@openright\cleardoublepage\else\clearpage\fi 
   % must clear page here, so that phantomsection\addcontentsline is on the correct page
   \phantomsection
@@ -1804,14 +1803,18 @@
   \fi
   
   \else  %there is no appendix so put \refname on same page
-  \begin{center}
-    \MakeUppercase{\refname}
-  \end{center}
-  \vskip 18\p@  %\vskip 0.3in
+  % \begin{center}
+  %   \MakeUppercase{\refname}
+  % \end{center}
+  % \vskip 18\p@  %\vskip 0.3in
+  \chapter*{\MakeUppercase{\refname}}
   \fi %end ifAppend
 
   % Remove title from bibliography
   \renewcommand{\bibsection}{}
+
+  % Make single spaced
+  \newlinestretch{1.0}
   
   \fi %end if bibpage
 }
