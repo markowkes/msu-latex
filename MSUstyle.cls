@@ -301,8 +301,8 @@
 \newcommand{\copyrightyear}[1]%
 {\ifx\empty#1\empty\else\gdef\@copyrightyear{#1}\fi}
 
-\newcommand{\submitdate}[1]%
-{\ifx\empty#1\empty\else\gdef\@submitdate{#1}\fi}
+\newcommand{\graduationdate}[1]%
+{\ifx\empty#1\empty\else\gdef\@graduationdate{#1}\fi}
 
 \newcommand{\thesisPermission}[1]%
 {\ifx\empty#1\empty\else\gdef\@thesisPermission{#1}\fi}
@@ -353,7 +353,7 @@
 \def\@department{}
 \def\@degreetitle{}
 \def\@graduatedean{}
-\def\@submitdate{\ifcase\the\month\or
+\def\@graduationdate{\ifcase\the\month\or
   January\or February\or March\or April\or May\or June\or
   July\or August\or September\or October\or November\or December\fi
   \space \number\the\year}
@@ -1456,7 +1456,7 @@
             \centering
             MONTANA STATE UNIVERSITY \\
             Bozeman, Montana \\ \vspace*{.3in}
-            {\@submitdate}%
+            {\@graduationdate}%
           \end{singlespaced} }
       }\\
     \end{center}
@@ -1567,7 +1567,7 @@
   % \vspace*{1.2in}
   % {\@author} \\ \\ \quad 
   {\@author} \\ $~$  \\ \quad      %My fix for another bad box
-  {\@submitdate}
+  {\@graduationdate}
   \thispagestyle{tcplain} 
 }
 
