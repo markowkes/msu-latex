@@ -29,9 +29,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{MSUstyle}
 [\MSUstyleupdated\space\MSUstyleversion\space(Montana State Graduate School)]%
-\RequirePackage{calc}% part of LaTeX tools bundle   
-\RequirePackage[plain]{algorithm}
-\RequirePackage{algorithmic}
 
 
 %%%%%%%%%%%% INITIAL CODE         %%%%%%%%%%%%
@@ -164,6 +161,10 @@
 %%%%%%%%%%%% PACKAGE  LOADING       %%%%%%%%%%%%
 %% Load base class using current setting for basic options.
 \LoadClass[\@thesisptsz,\@thesisside,\@thesisopen]{report}
+
+\RequirePackage{calc}% part of LaTeX tools bundle
+\RequirePackage[plain]{algorithm}
+\RequirePackage{algorithmic}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
