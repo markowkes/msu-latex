@@ -960,7 +960,7 @@
 % LOF, LOT, LOA spacing before and after number
 \renewcommand*\l@figure{%
   \let\MT@@toclineskip=\MT@beforefigskip@value
-  \MT@dottedtocline{1}{0.5in}{2.0em}}
+  \MT@dottedtocline{1}{0.25in}{2.0em}}
 \let\l@table\l@figure % Same for table and algorithm
 \let\l@algorithm\l@figure
 \newlength{\MT@tmpa}
