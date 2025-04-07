@@ -165,6 +165,7 @@
 \RequirePackage{calc}% part of LaTeX tools bundle
 \RequirePackage[plain]{algorithm}
 \RequirePackage{algorithmic}
+\RequirePackage{caption}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -1109,101 +1110,8 @@
 \def\theequation{\thechapter.\arabic{equation}}
 \def\thealgorithm{\thechapter.\arabic{algorithm}}
 
-%% Redefine the macro used for floats (including figures and tables)
-%% so that single spacing is used.
-%% (Note \def\figure{\@float{figure}set single spacing} doesn't work
-%% because figure has an optional argument)
-%% 
-%% This code was copied directly from latex.ltx, but with the
-%% \newlinespacing{} macro added to it.
-% 
-\def\@xfloat #1[#2]{%
-  \@nodocument
-  \def \@captype {#1}%
-  \def \@fps {#2}%
-  \@onelevel@sanitize \@fps
-  \def \reserved@b {!}%
-  \ifx \reserved@b \@fps
-  \@fpsadddefault
-  \else
-  \ifx \@fps \@empty
-  \@fpsadddefault
-  \fi
-  \fi
-  \ifhmode
-  \@bsphack
-  \@floatpenalty -\@Mii
-  \else
-  \@floatpenalty-\@Miii
-  \fi
-  \ifinner
-  \@parmoderr\@floatpenalty\z@
-  \else
-  \@next\@currbox\@freelist
-  {%
-    \@tempcnta \sixt@@n
-    \expandafter \@tfor \expandafter \reserved@a
-    \expandafter :\expandafter =\@fps
-    \do
-    {%
-      \if \reserved@a h%
-      \ifodd \@tempcnta
-      \else
-      \advance \@tempcnta \@ne
-      \fi
-      \fi
-      \if \reserved@a t%
-      \@setfpsbit \tw@
-      \fi
-      \if \reserved@a b%
-      \@setfpsbit 4%
-      \fi
-      \if \reserved@a p%
-      \@setfpsbit 8%
-      \fi
-      \if \reserved@a !%
-      \ifnum \@tempcnta>15
-      \advance\@tempcnta -\sixt@@n\relax
-      \fi
-      \fi
-    }%
-    \@tempcntb \csname ftype@\@captype \endcsname
-    \multiply \@tempcntb \@xxxii
-    \advance \@tempcnta \@tempcntb
-    \global \count\@currbox \@tempcnta
-  }%
-  \@fltovf
-  \fi
-  \global \setbox\@currbox
-  \color@vbox
-  \normalcolor
-  \vbox \bgroup
-  \vspace{16pt}			%Space above figures
-  % \newlinestretch{1.0}
-  \hsize\columnwidth
-  \@parboxrestore
-  \@floatboxreset
-}
-
-
-%% RW Triple space under figure captions
-% \addtolength{\belowcaptionskip}{14pt}
-
-
-% Do standard figure captions.
-% 
-\long\def\@makecaption#1#2{%
-  \vskip\abovecaptionskip
-  \sbox\@tempboxa{#1: #2}%
-  \ifdim \wd\@tempboxa >\hsize
-  #1: #2\par
-  \else
-  \global \@minipagefalse
-  \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
-  \fi
-  \vskip\belowcaptionskip}
-
-
+% Left-align captions
+\captionsetup{justification=raggedright, singlelinecheck=false}
 
 % 
 %% Chapter headings - centered, all caps, chapter number - roman numeral
