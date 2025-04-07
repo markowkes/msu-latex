@@ -166,6 +166,9 @@
 \RequirePackage[plain]{algorithm}
 \RequirePackage{algorithmic}
 \RequirePackage{caption}
+\RequirePackage{hyperref}
+\RequirePackage{titlecaps}
+\RequirePackage{etoolbox}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -687,6 +690,73 @@
   \addtolength{\MT@beforetableskip@value}{\z@ \@plus.2\p@}
 }
 \set@MTtocskip{10pt}
+
+%
+% Format the list of tables/figures/etc. per requirements.
+%
+% The formatting requirements are:
+% 1. Figure 1 figure caption
+% 2. Figure 2 figure caption
+% 3. Figure A1 (or Figure 3) appendix figure caption
+% 4. Figure A2 (or Figure 4) appendix figure caption
+%
+% Appendix figure numbering can restart at 1, continue, or restart at 1 and be prepended
+% with the appendix letter. The sample pages show the numbering as A1, A2, B1, B2, etc.
+%
+% Create counters for all the "list of" lists so we can put the number at the beginning.
+% We need a figure counter that is independent of the figure number because the figure numbers
+% start over in the appendices.
+% The toc counter is not used, but it is needed because \addcontentsline was patched generically
+% for all toc-like aux files (e.g., toc, lof, lot)
+\newcounter{toc}
+\newcounter{lot}
+\newcounter{lof}
+\newcounter{loa}
+
+% This length and horizontal box is used for typesetting the lof number (the 4.) in a fixed-width box.
+% This makes the "Figure x" text always line up.
+\newlength{\MT@loftnumwidth}
+\setlength{\MT@loftnumwidth}{2.0em}
+\newcommand{\MT@loftnum}[1]{\hb@xt@\MT@loftnumwidth{#1\hfil}}
+
+% NOTE: If the list of figures/tables/etc. is not being formatted correctly, uncomment \tracingpatches
+% and add some \show\addcontentsline commands before and after the patching to see if the patches are being applied.
+% \tracingpatches
+% \show\addcontentsline
+
+% Make \addcontentsline increment the relevant toc/lof/lot counter when something is added to the relevant aux file.
+\pretocmd{\addcontentsline}{\stepcounter{#1}}{\typeout{Prepended stepcounter to \string\addcontentsline}}{\typeout{Failed to prepend stepcounter to \string\addcontentsline}}
+
+% Patch \addcontentsline so it puts "1. Figure 1" in the list of figures instead of just the figure number.
+% This works generically for the lof, lot, loa, and lol.
+% I found the relevant line to patch by looking at the \addcontentsline definition in hyperref.sty. It's possible
+% that hyperref's \addcontentsline definition will change in the future, in which case we will need to update
+% this patch accordingly.
+%
+% \addcontentsline gets used for the toc and lof/lot. The chapters in the toc don't follow the same
+% format as the lof/lot do, so we don't want to change what gets put into the .toc aux file (hence the if statement)
+%
+% XXX: The if statement shows up in the aux files, which seems kind of ugly and hacky.
+%      Maybe there is a way to make only the relevant "\protect\contentsline" stuff show up in the aux file.
+%      Maybe token expansions could be used? Or we could define a different \addcontentsline for
+%      chapters and sections?
+%
+% Format as <lof counter value>. Figure <figure number>.
+% In most cases, the lof counter value will be the same as the figure number; this will only
+% differ when the figure numbering restarts at the appendix.
+\patchcmd{\addcontentsline}{\protect\contentsline{#2}{#3}{\thepage}{\@currentHref}\protected@file@percent}%
+{%
+  \ifstrequal{#1}{toc}
+  {
+  \protect\contentsline{#2}{#3}{\thepage}{\@currentHref}\protected@file@percent
+  }
+  {
+  \protect\contentsline{#2}{\MT@loftnum{\csname the#1\endcsname.}\titlecap{#2}\;#3}{\thepage}{\@currentHref}\protected@file@percent
+  }
+}
+{\typeout{Patched \string\addcontentsline}}
+{\typeout{Failed to patch \string\addcontentsline}}
+
 
 \renewcommand{\appendix}{%
   \ifAppendmultiple % Appendices page if multiple appendices
