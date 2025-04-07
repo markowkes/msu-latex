@@ -1105,10 +1105,14 @@
 
 
 %%%% for numbering figures and tables in sequential order not beginning again at the start of each chapter.
-\def\thefigure{\thechapter.\@arabic\c@figure}
-\def\thetable{\thechapter.\@arabic\c@table}
-\def\theequation{\thechapter.\arabic{equation}}
-\def\thealgorithm{\thechapter.\arabic{algorithm}}
+\@removefromreset{figure}{chapter}
+\@removefromreset{table}{chapter}
+\@removefromreset{equation}{chapter}
+\@removefromreset{algorithm}{chapter}
+\def\thefigure{\@arabic\c@figure}
+\def\thetable{\@arabic\c@table}
+\def\theequation{\@arabic\c@equation}
+\def\thealgorithm{\@arabic\c@algorithm}
 
 % Left-align captions
 \captionsetup{justification=raggedright, singlelinecheck=false}
