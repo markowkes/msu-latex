@@ -1675,7 +1675,7 @@
   \typeout{*****************        Nomenclature       ******************}
   \if@openright\cleardoublepage\else\clearpage\fi 
   \phantomsection%
-  \pdfbookmark[1]{Nomenclature}{nomenclature}
+  \pdfbookmark[0]{Nomenclature}{nomenclature}
   % Define headers
   \def\firheadmark{\tochead{Nomenclature}}
   \def\conheadmark{\tochead{Nomenclature -- Continued}}
