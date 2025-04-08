@@ -170,6 +170,11 @@
 \RequirePackage{titlecaps}
 \RequirePackage{etoolbox}
 
+% For determining whether or not to print the list of figures/tables/algorithms
+% and add a bookmark for them to the pdf bookmarks.
+% Provides \iftotalfigures, etc., which are true if the document has figures
+% and false if there are no figures.
+\RequirePackage[figure,table,algorithm]{totalcount}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%% MAIN  CODE          %%%%%%%%%%%%
@@ -386,21 +391,6 @@
 % 
 \newif\ifsignaturepage
 \signaturepagefalse % initially false by default
-
-%% Switch for generating a list of figures
-% 
-\newif\iffigurespage
-\figurespagetrue % initially true by default
-
-%% Switch for generating a list of tables
-% 
-\newif\iftablespage
-\tablespagetrue % initially true by default
-
-%% Switch for generating a list of tables
-% 
-\newif\ifalgorithmspage
-\algorithmspagetrue % initially true by default
 
 %% Switch for generating a table of contents
 % 
@@ -968,7 +958,7 @@
 
 %\RequirePackage{geometry}
 \newcommand{\do@tablespage}{%
-  \iftablespage
+  \iftotaltables
   \if@openright\cleardoublepage\else\clearpage\fi 
   % must clear page here, so that phantomsection\addcontentsline is on the correct page
   \phantomsection%
@@ -1006,7 +996,7 @@
 
 
 \newcommand{\do@figurespage}{%
-  \iffigurespage
+  \iftotalfigures
   \if@openright\cleardoublepage\else\clearpage\fi 
   % must clear page here, so that phantomsection\addcontentsline is on the correct page
   \phantomsection%
@@ -1044,7 +1034,7 @@
 }
 
 \newcommand{\do@algorithmspage}{%
-  \ifalgorithmspage
+  \iftotalalgorithms
   \if@openright\cleardoublepage\else\clearpage\fi 
 
   % must clear page here, so that phantomsection\addcontentsline is on the correct page
@@ -1685,7 +1675,7 @@
   \typeout{*****************        Nomenclature       ******************}
   \if@openright\cleardoublepage\else\clearpage\fi 
   \phantomsection%
-  \pdfbookmark[1]{Nomenclature}{nomenclature}
+  \pdfbookmark[0]{Nomenclature}{nomenclature}
   % Define headers
   \def\firheadmark{\tochead{Nomenclature}}
   \def\conheadmark{\tochead{Nomenclature -- Continued}}
