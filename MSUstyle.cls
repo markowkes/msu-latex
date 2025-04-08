@@ -29,9 +29,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{MSUstyle}
 [\MSUstyleupdated\space\MSUstyleversion\space(Montana State Graduate School)]%
-\RequirePackage{calc}% part of LaTeX tools bundle   
-\RequirePackage[plain]{algorithm}
-\RequirePackage{algorithmic}
 
 
 %%%%%%%%%%%% INITIAL CODE         %%%%%%%%%%%%
@@ -165,6 +162,14 @@
 %% Load base class using current setting for basic options.
 \LoadClass[\@thesisptsz,\@thesisside,\@thesisopen]{report}
 
+\RequirePackage{calc}% part of LaTeX tools bundle
+\RequirePackage[plain]{algorithm}
+\RequirePackage{algorithmic}
+\RequirePackage{caption}
+\RequirePackage{hyperref}
+\RequirePackage{titlecaps}
+\RequirePackage{etoolbox}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%% MAIN  CODE          %%%%%%%%%%%%
@@ -296,8 +301,8 @@
 \newcommand{\copyrightyear}[1]%
 {\ifx\empty#1\empty\else\gdef\@copyrightyear{#1}\fi}
 
-\newcommand{\submitdate}[1]%
-{\ifx\empty#1\empty\else\gdef\@submitdate{#1}\fi}
+\newcommand{\graduationdate}[1]%
+{\ifx\empty#1\empty\else\gdef\@graduationdate{#1}\fi}
 
 \newcommand{\thesisPermission}[1]%
 {\ifx\empty#1\empty\else\gdef\@thesisPermission{#1}\fi}
@@ -348,7 +353,7 @@
 \def\@department{}
 \def\@degreetitle{}
 \def\@graduatedean{}
-\def\@submitdate{\ifcase\the\month\or
+\def\@graduationdate{\ifcase\the\month\or
   January\or February\or March\or April\or May\or June\or
   July\or August\or September\or October\or November\or December\fi
   \space \number\the\year}
@@ -686,6 +691,73 @@
 }
 \set@MTtocskip{10pt}
 
+%
+% Format the list of tables/figures/etc. per requirements.
+%
+% The formatting requirements are:
+% 1. Figure 1 figure caption
+% 2. Figure 2 figure caption
+% 3. Figure A1 (or Figure 3) appendix figure caption
+% 4. Figure A2 (or Figure 4) appendix figure caption
+%
+% Appendix figure numbering can restart at 1, continue, or restart at 1 and be prepended
+% with the appendix letter. The sample pages show the numbering as A1, A2, B1, B2, etc.
+%
+% Create counters for all the "list of" lists so we can put the number at the beginning.
+% We need a figure counter that is independent of the figure number because the figure numbers
+% start over in the appendices.
+% The toc counter is not used, but it is needed because \addcontentsline was patched generically
+% for all toc-like aux files (e.g., toc, lof, lot)
+\newcounter{toc}
+\newcounter{lot}
+\newcounter{lof}
+\newcounter{loa}
+
+% This length and horizontal box is used for typesetting the lof number (the 4.) in a fixed-width box.
+% This makes the "Figure x" text always line up.
+\newlength{\MT@loftnumwidth}
+\setlength{\MT@loftnumwidth}{2.0em}
+\newcommand{\MT@loftnum}[1]{\hb@xt@\MT@loftnumwidth{#1\hfil}}
+
+% NOTE: If the list of figures/tables/etc. is not being formatted correctly, uncomment \tracingpatches
+% and add some \show\addcontentsline commands before and after the patching to see if the patches are being applied.
+% \tracingpatches
+% \show\addcontentsline
+
+% Make \addcontentsline increment the relevant toc/lof/lot counter when something is added to the relevant aux file.
+\pretocmd{\addcontentsline}{\stepcounter{#1}}{\typeout{Prepended stepcounter to \string\addcontentsline}}{\typeout{Failed to prepend stepcounter to \string\addcontentsline}}
+
+% Patch \addcontentsline so it puts "1. Figure 1" in the list of figures instead of just the figure number.
+% This works generically for the lof, lot, loa, and lol.
+% I found the relevant line to patch by looking at the \addcontentsline definition in hyperref.sty. It's possible
+% that hyperref's \addcontentsline definition will change in the future, in which case we will need to update
+% this patch accordingly.
+%
+% \addcontentsline gets used for the toc and lof/lot. The chapters in the toc don't follow the same
+% format as the lof/lot do, so we don't want to change what gets put into the .toc aux file (hence the if statement)
+%
+% XXX: The if statement shows up in the aux files, which seems kind of ugly and hacky.
+%      Maybe there is a way to make only the relevant "\protect\contentsline" stuff show up in the aux file.
+%      Maybe token expansions could be used? Or we could define a different \addcontentsline for
+%      chapters and sections?
+%
+% Format as <lof counter value>. Figure <figure number>.
+% In most cases, the lof counter value will be the same as the figure number; this will only
+% differ when the figure numbering restarts at the appendix.
+\patchcmd{\addcontentsline}{\protect\contentsline{#2}{#3}{\thepage}{\@currentHref}\protected@file@percent}%
+{%
+  \ifstrequal{#1}{toc}
+  {
+  \protect\contentsline{#2}{#3}{\thepage}{\@currentHref}\protected@file@percent
+  }
+  {
+  \protect\contentsline{#2}{\MT@loftnum{\csname the#1\endcsname.}\titlecap{#2}\;#3}{\thepage}{\@currentHref}\protected@file@percent
+  }
+}
+{\typeout{Patched \string\addcontentsline}}
+{\typeout{Failed to patch \string\addcontentsline}}
+
+
 \renewcommand{\appendix}{%
   \ifAppendmultiple % Appendices page if multiple appendices
   \if@openright
@@ -888,7 +960,7 @@
 % LOF, LOT, LOA spacing before and after number
 \renewcommand*\l@figure{%
   \let\MT@@toclineskip=\MT@beforefigskip@value
-  \MT@dottedtocline{1}{0.5in}{2.0em}}
+  \MT@dottedtocline{1}{0.25in}{2.0em}}
 \let\l@table\l@figure % Same for table and algorithm
 \let\l@algorithm\l@figure
 \newlength{\MT@tmpa}
@@ -1103,106 +1175,17 @@
 
 
 %%%% for numbering figures and tables in sequential order not beginning again at the start of each chapter.
-\def\thefigure{\thechapter.\@arabic\c@figure}
-\def\thetable{\thechapter.\@arabic\c@table}
-\def\theequation{\thechapter.\arabic{equation}}
-\def\thealgorithm{\thechapter.\arabic{algorithm}}
+\@removefromreset{figure}{chapter}
+\@removefromreset{table}{chapter}
+\@removefromreset{equation}{chapter}
+\@removefromreset{algorithm}{chapter}
+\def\thefigure{\@arabic\c@figure}
+\def\thetable{\@arabic\c@table}
+\def\theequation{\@arabic\c@equation}
+\def\thealgorithm{\@arabic\c@algorithm}
 
-%% Redefine the macro used for floats (including figures and tables)
-%% so that single spacing is used.
-%% (Note \def\figure{\@float{figure}set single spacing} doesn't work
-%% because figure has an optional argument)
-%% 
-%% This code was copied directly from latex.ltx, but with the
-%% \newlinespacing{} macro added to it.
-% 
-\def\@xfloat #1[#2]{%
-  \@nodocument
-  \def \@captype {#1}%
-  \def \@fps {#2}%
-  \@onelevel@sanitize \@fps
-  \def \reserved@b {!}%
-  \ifx \reserved@b \@fps
-  \@fpsadddefault
-  \else
-  \ifx \@fps \@empty
-  \@fpsadddefault
-  \fi
-  \fi
-  \ifhmode
-  \@bsphack
-  \@floatpenalty -\@Mii
-  \else
-  \@floatpenalty-\@Miii
-  \fi
-  \ifinner
-  \@parmoderr\@floatpenalty\z@
-  \else
-  \@next\@currbox\@freelist
-  {%
-    \@tempcnta \sixt@@n
-    \expandafter \@tfor \expandafter \reserved@a
-    \expandafter :\expandafter =\@fps
-    \do
-    {%
-      \if \reserved@a h%
-      \ifodd \@tempcnta
-      \else
-      \advance \@tempcnta \@ne
-      \fi
-      \fi
-      \if \reserved@a t%
-      \@setfpsbit \tw@
-      \fi
-      \if \reserved@a b%
-      \@setfpsbit 4%
-      \fi
-      \if \reserved@a p%
-      \@setfpsbit 8%
-      \fi
-      \if \reserved@a !%
-      \ifnum \@tempcnta>15
-      \advance\@tempcnta -\sixt@@n\relax
-      \fi
-      \fi
-    }%
-    \@tempcntb \csname ftype@\@captype \endcsname
-    \multiply \@tempcntb \@xxxii
-    \advance \@tempcnta \@tempcntb
-    \global \count\@currbox \@tempcnta
-  }%
-  \@fltovf
-  \fi
-  \global \setbox\@currbox
-  \color@vbox
-  \normalcolor
-  \vbox \bgroup
-  \vspace{16pt}			%Space above figures
-  % \newlinestretch{1.0}
-  \hsize\columnwidth
-  \@parboxrestore
-  \@floatboxreset
-}
-
-
-%% RW Triple space under figure captions
-% \addtolength{\belowcaptionskip}{14pt}
-
-
-% Do standard figure captions.
-% 
-\long\def\@makecaption#1#2{%
-  \vskip\abovecaptionskip
-  \sbox\@tempboxa{#1: #2}%
-  \ifdim \wd\@tempboxa >\hsize
-  #1: #2\par
-  \else
-  \global \@minipagefalse
-  \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
-  \fi
-  \vskip\belowcaptionskip}
-
-
+% Left-align captions
+\captionsetup{justification=raggedright, singlelinecheck=false}
 
 % 
 %% Chapter headings - centered, all caps, chapter number - roman numeral
@@ -1473,7 +1456,7 @@
             \centering
             MONTANA STATE UNIVERSITY \\
             Bozeman, Montana \\ \vspace*{.3in}
-            {\@submitdate}%
+            {\@graduationdate}%
           \end{singlespaced} }
       }\\
     \end{center}
@@ -1584,7 +1567,7 @@
   % \vspace*{1.2in}
   % {\@author} \\ \\ \quad 
   {\@author} \\ $~$  \\ \quad      %My fix for another bad box
-  {\@submitdate}
+  {\@graduationdate}
   \thispagestyle{tcplain} 
 }
 
