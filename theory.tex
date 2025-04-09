@@ -30,7 +30,7 @@ Figures can easily be added to your latex document.  Graphs and figures should b
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.6\textwidth]{figs/plot.pdf}
+  \includegraphics[alt={Alt text should describe the image but not repeat what is in the caption.}, width=0.6\textwidth]{figs/plot.pdf}
   \caption{This is a figure of some data.}
   \label{fig:plot}
 \end{figure}
@@ -41,7 +41,7 @@ Figure~\ref{fig:photo} shows you can also put pictures into \LaTeX{} documents. 
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.6\textwidth]{figs/MSU.jpg}
+  \includegraphics[alt={Montana Hall during winter}, width=0.6\textwidth]{figs/MSU.jpg}
   \caption{Montana Hall during winter on Montana State University's campus.}
   \label{fig:photo}
 \end{figure}
@@ -77,7 +77,7 @@ Figure~\ref{fig:tikz} shows that you can create figures directly within your \La
 
 \begin{figure}[p!]
   \centering
-  \includegraphics[width=0.6\textwidth]{figs/MSU.jpg}
+  \includegraphics[alt={Montana Hall during winter.}, width=0.6\textwidth]{figs/MSU.jpg}
   \caption[Figure forced to be on page by itself]{Figure forced to be on page by itself. Captions are single-spaced. Lorem ipsum makes a really long caption. \lipsum[7]}
   \label{fig:page}
 \end{figure}
@@ -139,3 +139,28 @@ The \verb|label| used in the \verb|\ref| command can be anything you want to use
 
 \subsection{Citing Others Work}\label{Sect:cite}
 Citing others work is an important aspect of all scientific writing.  All citations should be placed in the .bib file(s) listed in your main.tex document.  Cite others work using the \verb|\cite| command, \eg,~\cite{owkes_mesh-decoupled_2015}.  Multiple citations should be done within one cite command, \eg,~\cite{desjardins_direct_2013,owkes_discontinuous_2013,owkes_computational_2014}.  
+
+\section{Accessibility}
+
+Accessible documents make the content available to those who use assistive technology such as screen readers. In particular, adding alternative text (alt text) to images allows people with visual impairments to understand the content of the image.
+
+To add alt text to figures, use the \texttt{alt} option in \verb|\includegraphics|:
+\begin{verbatim}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[alt={Alt text should describe the image but not repeat
+    what is in the caption.}, width=0.6\textwidth]{figs/plot.pdf}
+  \caption{This is a figure of some data.}
+  \label{fig:plot}
+\end{figure}
+\end{verbatim}
+
+For alt text to show up, you must produce a \textit{tagged} pdf. As of May 2025, you must add the following \texttt{DocumentMetadata} to the top of your document \textit{before} the \verb|\documentclass| command:
+\begin{verbatim}
+\DocumentMetadata{
+	lang = en-US,
+	testphase = latest
+}
+\end{verbatim}
+
+For the latest information on creating accessible documents with \LaTeX, see the LaTeX Tagging Project\footnote{\url{https://latex3.github.io/tagging-project/}}.
