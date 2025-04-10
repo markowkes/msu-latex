@@ -2,9 +2,17 @@
 % which supports alt text for images and other accessibility features.
 % See https://latex3.github.io/tagging-project/ for the latest information
 % on creating accessible tagged pdfs with LaTeX.
+% XXX: As of May 2025, the caption package is not compatible with PDF tagging
+% (needed for alt text); the tagging project messes up caption alignment,
+% so there is a workaround in MSUstyle.cls to fix that. The workaround will
+% likely break or not be needed in the future. If captions are not left-aligned,
+% please check if the tagging project supports the caption package and adjust
+% MSUstyle.cls as needed.
+% XXX: The tagging project also breaks hyperlinks in the table of contents
+% right now as well (more info in MSUstyle.cls above the \l@chapter definition) 
 \DocumentMetadata{
-	lang = en-US,
-	testphase = latest
+	lang=en,
+	testphase=latest
 }
 \documentclass[dissertation,appendsingle]{MSUstyle}
 %

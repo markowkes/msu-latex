@@ -157,6 +157,42 @@
 % 
 \ProcessOptions
 
+% XXX: The following is a workaround for the tagging project messing up
+% caption formatting. The tagging project doesn't support the caption package
+% because it overwrites some caption commands. Workaround came from this github
+% issue: https://github.com/latex3/tagging-project/issues/720
+% Eventually this workaround won't be needed, so this could will be deleted eventually.
+\RemoveFromHook{begindocument}[latex-lab-testphase-float]
+\ExplSyntaxOn
+\socket_new_plug:nnn{tagsupport/parbox/before}{caption}
+  {   
+   \tagpdfparaOn %restart para tagging
+   \tl_if_empty:NTF\@current@float@struct
+    {     
+     \tag_struct_begin:n{tag=Caption,firstkid}
+    }
+    {
+     \tag_struct_begin:n{tag=Caption,parent=\@current@float@struct,firstkid}
+    } 
+  }
+\socket_new_plug:nnn{tagsupport/parbox/after}{caption}
+  {
+   \tag_struct_end:   
+  }
+\l@addto@macro\caption@beginex@hook{%
+  \tagpdfparaOff %leavevmode in parbox should not start paragraph structure
+  \AssignSocketPlug{tagsupport/parbox/before}{caption}
+  \AssignSocketPlug{tagsupport/parbox/after}{caption}}
+\ExplSyntaxOff
+
+\AtBeginDocument{
+  \renewcommand*\caption@anchor[1]{%
+        \ifmeasuring@ \else
+           \caption@raisedlink{\MakeLinkTarget*{#1}}%
+        \fi}%  
+}
+% XXX: end of caption tagging workaround
+
 
 %%%%%%%%%%%% PACKAGE  LOADING       %%%%%%%%%%%%
 %% Load base class using current setting for basic options.
@@ -863,6 +899,17 @@
 
 \setappendixtocdepth{3}
 \renewcommand\@dotsep{0.2} %%dot separation in TOC, LOT, LOF and LOA
+
+% XXX: Our custom l@chapter and l@figure macros are not compatible with the
+% latex tagging project, which is used for creating accessible tagged pdfs (e.g., so we can have alt text for images). The clash between our redefinitions and
+% the redefinitions in the latex tagging project make it so hyperlinks don't
+% work in the toc and lof/lot/etc. See this github issue for a little bit more
+% context: https://github.com/latex3/tagging-project/issues/89
+% At some point, as the tagging project matures, we may have to revisit our
+% redefinitions of l@chapter and other toc/lot/lof formatting macros so we can
+% properly support hyperlinks and have formatting that is compliant with the
+% MSU formatting requirements. For now, as of May 2025, I'm leaving this as is
+% and accepting that hyperlinks are broken...
 
 \renewcommand*\l@chapter[2]{% this changes spacings in the TOC
   \ifnum \c@tocdepth >\m@ne
