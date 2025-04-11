@@ -544,10 +544,9 @@
 
 %%%%%% Page Styles
 % 
-% redefinition of tcplain to meet MSU requirements (top center page numbering)
+% redefinition of plain to meet MSU requirements (top center page numbering)
 \if@twoside % if two-sided printing
-\newcommand{\ps@tcplain}{%
-  \@tcpagetrue%
+\renewcommand{\ps@plain}{%
   \let\@mkboth\markboth%
   \def\@oddfoot{%
     \if@draft%
@@ -566,10 +565,9 @@
     \hfil\thepage\hfil%
     \if@draft\trDRAFT\fi%
   }%
-}%ps@tcplain
+}%ps@plain
 \else % if one-sided printing
-\newcommand{\ps@tcplain}{%
-  \@tcpagetrue%
+\renewcommand{\ps@plain}{%
   \let\@mkboth\markboth%
   \def\@oddfoot{%
     \if@draft%
@@ -582,7 +580,7 @@
     \hfil\thepage\hfil%
     \if@draft\trDRAFT\fi%
   }%
-}%ps@tcplain
+}%ps@plain
 \fi % @twoside 
 
   
@@ -645,10 +643,10 @@
 \raggedbottom
 % 
 %% Default page style.
-\pagestyle{tcplain}
-\setfrontpagestyle{tcplain}
-\setbodypagestyle{tcplain}
-\setbackpagestyle{tcplain}
+\pagestyle{plain}
+\setfrontpagestyle{plain}
+\setbodypagestyle{plain}
+\setbackpagestyle{plain}
 
 \if@altchapter
   \AtBeginDocument{\protect{\setcounter{secnumdepth}{4}}}
@@ -805,7 +803,7 @@
   \fi
   \fi
   \renewcommand{\@chapapp}{\MakeUppercase{\appendixname}}
-  \thispagestyle{tcplain}%    Do NOT use the \back@pagestyle macro here
+  \thispagestyle{plain}%    Do NOT use the \back@pagestyle macro here
   \settocdepth{\appendix@tocdepth}
   \setcounter{chapter}{0}%
   \setcounter{section}{0}%
@@ -1258,20 +1256,10 @@
   \chapapp@schapter{#1}
 }
 % 
-%% The actual guts of the chapter heading routines
 
-\renewcommand{\chapter}{%
-  \if@openright\cleardoublepage\else\clearpage\fi
-  \if@tcpage% DO NOT use the \front@pagestyle macro here.
-  {\thispagestyle{tcplain}}
-  \else
-  {\thispagestyle{plain}} %
-  \fi 
-  \settocdepth{\chapapp@tocdepth}
-  \global\@topnum\z@
-  \@afterindenttrue
-  \secdef\@chapter\@schapter
-}
+% Append \settocdepth{\chapapp@tocdepth} to the \chapter macro so we can change
+% tocdepth for chapter and appendix separately in case we want to.
+\apptocmd{\chapter}{\settocdepth{\chapapp@tocdepth}}{\typeout{\string\settocdepth\ appended to \string\chapter}}{\typeout{failed to append \string\settocdepth\ to \string\chapter}}
 
 %% TOC chapter headings
 \def\chap@chapter[#1]#2{%
@@ -1586,7 +1574,7 @@
   \end{center}
 
   % \vfill \quad %to center on page
-  \thispagestyle{tcplain} 
+  \thispagestyle{plain}
 }
 
 
@@ -1605,7 +1593,7 @@
   % {\@author} \\ \\ \quad 
   {\@author} \\ $~$  \\ \quad      %My fix for another bad box
   {\@graduationdate}
-  \thispagestyle{tcplain} 
+  \thispagestyle{plain}
 }
 
 
