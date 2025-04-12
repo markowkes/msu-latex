@@ -157,6 +157,29 @@
 % 
 \ProcessOptions
 
+
+
+%%%%%%%%%%%% PACKAGE  LOADING       %%%%%%%%%%%%
+%% Load base class using current setting for basic options.
+\LoadClass[\@thesisptsz,\@thesisside,\@thesisopen]{report}
+
+\RequirePackage{calc}% part of LaTeX tools bundle
+\RequirePackage[plain]{algorithm}
+\RequirePackage{algorithmic}
+\RequirePackage{caption}
+\RequirePackage{hyperref}
+\RequirePackage{titlecaps}
+\RequirePackage{etoolbox}
+
+% For determining whether or not to print the list of figures/tables/algorithms
+% and add a bookmark for them to the pdf bookmarks.
+% Provides \iftotalfigures, etc., which are true if the document has figures
+% and false if there are no figures.
+\RequirePackage[figure,table,algorithm]{totalcount}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%% MAIN  CODE          %%%%%%%%%%%%
+
 % XXX: The following is a workaround for the tagging project messing up
 % caption formatting. The tagging project doesn't support the caption package
 % because it overwrites some caption commands. Workaround came from this github
@@ -193,27 +216,6 @@
 }
 % XXX: end of caption tagging workaround
 
-
-%%%%%%%%%%%% PACKAGE  LOADING       %%%%%%%%%%%%
-%% Load base class using current setting for basic options.
-\LoadClass[\@thesisptsz,\@thesisside,\@thesisopen]{report}
-
-\RequirePackage{calc}% part of LaTeX tools bundle
-\RequirePackage[plain]{algorithm}
-\RequirePackage{algorithmic}
-\RequirePackage{caption}
-\RequirePackage{hyperref}
-\RequirePackage{titlecaps}
-\RequirePackage{etoolbox}
-
-% For determining whether or not to print the list of figures/tables/algorithms
-% and add a bookmark for them to the pdf bookmarks.
-% Provides \iftotalfigures, etc., which are true if the document has figures
-% and false if there are no figures.
-\RequirePackage[figure,table,algorithm]{totalcount}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%%%%%%%%%%%% MAIN  CODE          %%%%%%%%%%%%
 
 
 %%% phantomsection, texorpdfstring, and pdfbookmark are needed if you do
