@@ -170,6 +170,7 @@
 \RequirePackage{hyperref}
 \RequirePackage{titlecaps}
 \RequirePackage{etoolbox}
+\RequirePackage[depth=3]{bookmark}
 
 % For determining whether or not to print the list of figures/tables/algorithms
 % and add a bookmark for them to the pdf bookmarks.
@@ -185,37 +186,36 @@
 % because it overwrites some caption commands. Workaround came from this github
 % issue: https://github.com/latex3/tagging-project/issues/720
 % Eventually this workaround won't be needed, so this could will be deleted eventually.
-\RemoveFromHook{begindocument}[latex-lab-testphase-float]
-\ExplSyntaxOn
-\socket_new_plug:nnn{tagsupport/parbox/before}{caption}
-  {   
-   \tagpdfparaOn %restart para tagging
-   \tl_if_empty:NTF\@current@float@struct
-    {     
-     \tag_struct_begin:n{tag=Caption,firstkid}
-    }
-    {
-     \tag_struct_begin:n{tag=Caption,parent=\@current@float@struct,firstkid}
-    } 
-  }
-\socket_new_plug:nnn{tagsupport/parbox/after}{caption}
-  {
-   \tag_struct_end:   
-  }
-\l@addto@macro\caption@beginex@hook{%
-  \tagpdfparaOff %leavevmode in parbox should not start paragraph structure
-  \AssignSocketPlug{tagsupport/parbox/before}{caption}
-  \AssignSocketPlug{tagsupport/parbox/after}{caption}}
-\ExplSyntaxOff
+% \RemoveFromHook{begindocument}[latex-lab-testphase-float]
+% \ExplSyntaxOn
+% \socket_new_plug:nnn{tagsupport/parbox/before}{caption}
+%   {   
+%    \tagpdfparaOn %restart para tagging
+%    \tl_if_empty:NTF\@current@float@struct
+%     {     
+%      \tag_struct_begin:n{tag=Caption,firstkid}
+%     }
+%     {
+%      \tag_struct_begin:n{tag=Caption,parent=\@current@float@struct,firstkid}
+%     } 
+%   }
+% \socket_new_plug:nnn{tagsupport/parbox/after}{caption}
+%   {
+%    \tag_struct_end:   
+%   }
+% \l@addto@macro\caption@beginex@hook{%
+%   \tagpdfparaOff %leavevmode in parbox should not start paragraph structure
+%   \AssignSocketPlug{tagsupport/parbox/before}{caption}
+%   \AssignSocketPlug{tagsupport/parbox/after}{caption}}
+% \ExplSyntaxOff
 
-\AtBeginDocument{
-  \renewcommand*\caption@anchor[1]{%
-        \ifmeasuring@ \else
-           \caption@raisedlink{\MakeLinkTarget*{#1}}%
-        \fi}%  
-}
+% \AtBeginDocument{
+%   \renewcommand*\caption@anchor[1]{%
+%         \ifmeasuring@ \else
+%            \caption@raisedlink{\MakeLinkTarget*{#1}}%
+%         \fi}%  
+% }
 % XXX: end of caption tagging workaround
-
 
 
 %%% phantomsection, texorpdfstring, and pdfbookmark are needed if you do
@@ -1261,7 +1261,21 @@
 
 % Append \settocdepth{\chapapp@tocdepth} to the \chapter macro so we can change
 % tocdepth for chapter and appendix separately in case we want to.
-\apptocmd{\chapter}{\settocdepth{\chapapp@tocdepth}}{\typeout{\string\settocdepth\ appended to \string\chapter}}{\typeout{failed to append \string\settocdepth\ to \string\chapter}}
+% \apptocmd{\chapter}{\settocdepth{\chapapp@tocdepth}}{\typeout{\string\settocdepth\ appended to \string\chapter}}{\typeout{failed to append \string\settocdepth\ to \string\chapter}}
+%% The actual guts of the chapter heading routines
+
+\renewcommand{\chapter}{%
+  \if@openright\cleardoublepage\else\clearpage\fi
+  \if@tcpage% DO NOT use the \front@pagestyle macro here.
+  {\thispagestyle{tcplain}}
+  \else
+  {\thispagestyle{plain}} %
+  \fi 
+  \settocdepth{\chapapp@tocdepth}
+  \global\@topnum\z@
+  \@afterindenttrue
+  \secdef\@chapter\@schapter
+}
 
 %% TOC chapter headings
 \def\chap@chapter[#1]#2{%
