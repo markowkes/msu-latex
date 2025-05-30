@@ -1341,10 +1341,10 @@
   \titlespacing{\section}{0pt}{*3}{*3}
   \titlespacing{\subsection}{0pt}{*3}{0pt}
   \titlespacing{\subsubsection}{0pt}{*3}{1ex}
-  \titleformat{\chapter}[display]{\centering}{CHAPTER \NUMBERstringnum{\thechapter}}{3.5ex}{\uppercase}
-  \titleformat{\section}[hang]{\centering}{\uline{\thesection\hspace*{0.5em}}}{0em}{\uline}
-  \titleformat{\subsection}[hang]{}{\uline{\thesubsection\hspace*{0.5em}}}{0em}{\uline}
-  \titleformat{\subsubsection}[runin]{}{\indent{\uline{\thesubsubsection\hspace*{0.5em}}}}{0em}{\uline}
+  \titleformat{\chapter}[display]{\phantomsection\centering}{CHAPTER \NUMBERstringnum{\thechapter}}{3.5ex}{\uppercase}
+  \titleformat{\section}[hang]{\phantomsection\centering}{\uline{\thesection\hspace*{0.5em}}}{0em}{\uline}
+  \titleformat{\subsection}[hang]{\phantomsection}{\uline{\thesubsection\hspace*{0.5em}}}{0em}{\uline}
+  \titleformat{\subsubsection}[runin]{\phantomsection}{\indent{\uline{\thesubsubsection\hspace*{0.5em}}}}{0em}{\uline}
 
   % Long subsection title command
   \newcommand{\longsubsection}[3][]{%
@@ -1353,7 +1353,7 @@
       {\addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}#2\\ #3}}
       {\addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}#1}}
     \begin{singlespace}
-      ~\\
+      ~\\ \phantomsection
       \noindent\thesubsection\hspace*{0.5em}#2\\\uline{#3}\par%
     \end{singlespace}
   }%
@@ -1364,7 +1364,7 @@
     \ifthenelse{\equal{#1}{}}%
       {\addcontentsline{toc}{subsubsection}{\protect\numberline{\thesubsubsection}#2\\ #3}}
       {\addcontentsline{toc}{subsubsection}{\protect\numberline{\thesubsubsection}#1}}
-      ~\\
+      ~\\ \phantomsection
     \begin{singlespace}
       \noindent\thesubsubsection\hspace*{0.5em}#2\\\uline{#3}\par%
     \end{singlespace}
@@ -1376,10 +1376,10 @@
   \titlespacing{\section}{0pt}{*3}{*3}
   \titlespacing{\subsection}{0pt}{*3}{0pt}
   \titlespacing{\subsubsection}{0pt}{*3}{1ex}
-  \titleformat{\chapter}{\centering\uppercase}{}{0pt}{}
-  \titleformat{\section}[hang]{\centering}{}{0em}{\uline}
-  \titleformat{\subsection}[hang]{}{}{0em}{\uline}[]
-  \titleformat{\subsubsection}[runin]{}{}{0em}{\indent\uline}
+  \titleformat{\chapter}{\phantomsection\centering\uppercase}{}{0pt}{}
+  \titleformat{\section}[hang]{\phantomsection\centering}{}{0em}{\uline}
+  \titleformat{\subsection}[hang]{\phantomsection}{}{0em}{\uline}[]
+  \titleformat{\subsubsection}[runin]{\phantomsection}{}{0em}{\indent\uline}
 
   % Long subsection title command
   \newcommand{\longsubsection}[3][]{%
@@ -1388,7 +1388,7 @@
       {\addcontentsline{toc}{subsection}{#2\\ #3}}
       {\addcontentsline{toc}{subsection}{#1}} 
     \begin{singlespace}
-      ~\\
+      ~\\ \phantomsection
       \noindent#2\\\uline{#3}\par%
     \end{singlespace}
   }%
@@ -1400,7 +1400,7 @@
      {\addcontentsline{toc}{subsubsection}{#2\\ #3}}
      {\addcontentsline{toc}{subsubsection}{#1}} 
     \begin{singlespace}
-      ~\\
+      ~\\ \phantomsection
       \noindent#2\\\uline{#3}\par%
     \end{singlespace}
   }%
