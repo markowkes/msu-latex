@@ -86,6 +86,170 @@ Whenever you are unsure how to create a particular element in your thesis or dis
 
 ---
 
+## Template Options
+
+Most document formatting options are controlled through the document class declaration near the top of `main.tex`:
+
+```latex
+\documentclass[dissertation,appendsingle]{MSUstyle}
+```
+
+The default settings produce a document that conforms to current MSU Electronic Thesis/Dissertation (ETD) requirements. Most students will not need to modify these options, but several common customizations are available.
+
+### Thesis or Dissertation
+
+The template defaults to a dissertation:
+
+```latex
+\documentclass[dissertation]{MSUstyle}
+```
+
+For a master's thesis, use:
+
+```latex
+\documentclass[thesis]{MSUstyle}
+```
+
+This adjusts the front matter to match MSU requirements for a master's thesis.
+
+### Appendices
+
+If your document contains a single appendix:
+
+```latex
+\documentclass[appendsingle]{MSUstyle}
+```
+
+If your document contains multiple appendices:
+
+```latex
+\documentclass[appendmultiple]{MSUstyle}
+```
+
+If your document does not contain any appendices, remove these options and comment out the appendix section near the end of `main.tex`.
+
+### Draft Mode
+
+When editing, you may wish to create shorter drafts that use less paper and compile more quickly.
+
+Examples:
+
+```latex
+\documentclass[10pt,singlespaced,draft]{MSUstyle}
+```
+
+You may also specify a draft version number:
+
+```latex
+\draftver{1.0}
+```
+
+The draft option is intended for working documents and should normally be removed before your final submission.
+
+### Numbered Sections
+
+By default, some chapter and section titles may appear without numbering.
+
+To force numbering of chapters and sections:
+
+```latex
+\documentclass[numberedsections]{MSUstyle}
+```
+
+### Figure and Table Numbering
+
+By default, figure, table, and equation numbers reset within each chapter:
+
+```text
+Figure 3.2
+Table 4.1
+Equation 5.7
+```
+
+You can disable chapter-based numbering using:
+
+```latex
+\documentclass[nonumreset]{MSUstyle}
+```
+
+This is generally not recommended for theses and dissertations.
+
+### Printing Options
+
+The default document layout is:
+
+```latex
+\documentclass[oneside,openright]{MSUstyle}
+```
+
+This produces 1-inch margins suitable for electronic submission.
+
+Other useful options include:
+
+#### Bound or Printed Copies
+
+```latex
+\documentclass[oneside,openright,bigmargin]{MSUstyle}
+```
+
+Adds a larger left margin for binding.
+
+#### Double-Sided Printing
+
+```latex
+\documentclass[twoside,openright]{MSUstyle}
+```
+
+Creates a double-sided document and inserts blank pages when necessary so that chapters begin on right-hand pages.
+
+#### Double-Sided Printing with Binding Margins
+
+```latex
+\documentclass[twoside,openright,bigmargin]{MSUstyle}
+```
+
+Alternates larger inner margins for binding and produces the highest-quality printed copies.
+
+### Accessibility Features
+
+The template includes support for modern tagged PDF generation and PDF accessibility features.
+
+In rare cases, a package or custom code may cause tagging errors during compilation. If this occurs, tagging can be temporarily disabled around the problematic content using:
+
+```latex
+\tagpdfparaOff
+
+% problematic content
+
+\tagpdfparaOn
+```
+
+Most users will not need to modify these settings.
+
+### Personal Information and Document Metadata
+
+The following fields near the top of `main.tex` should be updated before writing your document:
+
+```latex
+\name{Your Full Name}
+\DocTitle{Your Thesis Title}
+\degreetitle{Engineering}
+\department{Mechanical and Industrial Engineering}
+\committeechair{Advisor Name}
+\graduationdate{May 2027}
+\copyrightyear{2027}
+```
+
+These values automatically populate the title page, approval pages, PDF metadata, and other required document elements.
+
+---
+
+## Manuscript Option 
+
+The repository includes an example manuscript-style chapter (manuscript_option.tex) that demonstrates how students wanting to include publication manuscripts in their thesis or dissertation should. Students planning to include published or publication-ready journal articles in their thesis/dissertation should review this example in both the source files and the generated PDF.
+
+---
+
 ## Repository Structure
 
 ```text
